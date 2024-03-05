@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload</title>
+  <!-- Link Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Ai Upload</h5>
+          </div>
+          <div class="card-body">
+            <!-- File Upload Form -->
+            <form id="fileUploadForm" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="fileUpload">Choose File</label>
+                <input type="file" class="form-control-file" id="fileUpload" name="upload">
+              </div>
+              <button type="submit" class="btn btn-primary">Upload File</button>
+            </form>
+
+            <!-- Text Upload Form -->
+            <form id="textUploadForm">
+              <div class="form-group mt-3">
+                <label for="textInput">Enter Text</label>
+                <textarea class="form-control" id="textInput" name="textInput" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Upload Text</button>
+            </form>
+
+            <div id="result" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS, Popper.js, and jQuery (optional) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    // Add event listener for file upload form submission
+    document.getElementById('fileUploadForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the form from submitting
+      
+      // Create FormData object to send the file
+      const formData = new FormData(this);
+
+      // Send file to server using fetch
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        // Display the returned message on the page
+        document.getElementById('result').innerHTML = `<p>${data}</p>`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+
+    // Add event listener for text upload form submission
+    document.getElementById('textUploadForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the form from submitting
+      
+      // Get the text input value
+      const textInput = document.getElementById('textInput').value;
+
+      // Send text data to server using fetch
+      fetch('/uploadText', {
+        method: 'POST',
+        body: textInput
+      })
+      .then(response => response.text())
+      .then(data => {
+        // Display the returned message on the page
+        document.getElementById('result').innerHTML = `<p>${data}</p>`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>
